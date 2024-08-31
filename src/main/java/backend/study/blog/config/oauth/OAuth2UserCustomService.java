@@ -3,6 +3,7 @@ package backend.study.blog.config.oauth;
 import backend.study.blog.domain.User;
 import backend.study.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
+@Profile("prod")
 public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
