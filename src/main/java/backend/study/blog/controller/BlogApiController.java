@@ -6,6 +6,7 @@ import backend.study.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -19,7 +20,8 @@ public class BlogApiController {
     private final BlogService blogService;
 
     @PostMapping("")
-    public ResponseEntity<ArticleDto> addArticle(@RequestBody ArticleDto articleDto, Principal principal) {
+    public ResponseEntity<ArticleDto> addArticle(@RequestBody @Validated ArticleDto articleDto,
+                                                 Principal principal) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ArticleDto.toDto(blogService.save(articleDto, principal.getName())));
     }

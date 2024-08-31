@@ -47,4 +47,34 @@ public class CookieUtil {
                 )
         );
     }
+
+//    SerializationUtils.deserialize 가 deprecated -> 아래의 메서드로 변경
+//      변경하는 김에 위의 메서드 serialize 도 변경하여 아래의 메서드들로 대체할 수 있으나 호출하는 쪽에서 IOExeption 처리를 해주어야 한다.
+//    public static <T> T deserialize(Cookie cookie, Class<T> cls) throws IOException, ClassNotFoundException {
+//        // Base64로 인코딩된 쿠키 값을 디코딩하여 바이트 배열로 변환
+//        byte[] data = Base64.getUrlDecoder().decode(cookie.getValue());
+//
+//        // ByteArrayInputStream을 통해 ObjectInputStream으로 변환
+//        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+//             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
+//
+//            // 역직렬화된 객체를 반환
+//            Object deserializedObject = objectInputStream.readObject();
+//
+//            // 역직렬화된 객체가 원하는 타입인지 확인
+//            if (cls.isInstance(deserializedObject)) {
+//                return cls.cast(deserializedObject);
+//            } else {
+//                throw new ClassCastException("Failed to cast deserialized object to " + cls.getName());
+//            }
+//        }
+//    }
+//    public static String serialize(Object obj) throws IOException {
+//        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+//            objectOutputStream.writeObject(obj);
+//            byte[] serializedBytes = byteArrayOutputStream.toByteArray();
+//            return Base64.getUrlEncoder().encodeToString(serializedBytes);
+//        }
+//    }
 }
