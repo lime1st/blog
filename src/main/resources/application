@@ -1,0 +1,27 @@
+spring.application.name=blog
+
+#spring.datasource.url=jdbc:h2:mem:testdb
+# H2 id/pw
+#spring.datasource.username=sa
+#spring.datasource.password=password
+
+#spring.h2.console.enabled=true
+
+# SQL SHOW
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# data.sql run After create table
+spring.jpa.defer-datasource-initialization=ture
+# sql autorun /resources/finename.sql
+#spring.sql.init.mode=never5
+
+# OAuth Client
+spring.security.oauth2.client.registration.google.client-id=91946177251-seu2g7j2pla973qvckopplk52agu04iq.apps.googleusercontent.com
+spring.security.oauth2.client.registration.google.client-secret=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
+spring.security.oauth2.client.registration.google.scope[0]=email
+spring.security.oauth2.client.registration.google.scope[1]=profile
+
+#  property value: JwtProperties.java
+jwt.issuer=test@test.com
+jwt.secret_key=blog
