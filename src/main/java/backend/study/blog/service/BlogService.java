@@ -1,5 +1,8 @@
 package backend.study.blog.service;
 
+import backend.study.blog.config.error.ErrorCode;
+import backend.study.blog.config.error.exception.ArticleNotFoundException;
+import backend.study.blog.config.error.exception.NotFoundException;
 import backend.study.blog.domain.Article;
 import backend.study.blog.dto.ArticleDto;
 import backend.study.blog.repository.BlogRepository;
@@ -26,12 +29,12 @@ public class BlogService {
 
     public Article findById(long id) {
         return blogRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+                .orElseThrow(ArticleNotFoundException::new);
     }
 
     public void delete(long id) {
         Article article = blogRepository.findById(id)
-                        .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+                        .orElseThrow(ArticleNotFoundException::new);
         authorizeArticleAuthor(article);
         blogRepository.deleteById(article.getId());
     }
@@ -39,7 +42,7 @@ public class BlogService {
     @Transactional
     public Article update(long id, ArticleDto articleDto) {
         Article article = blogRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+                .orElseThrow(ArticleNotFoundException::new);
 
         authorizeArticleAuthor(article);
         article.update(articleDto.getTitle(), articleDto.getContent());
@@ -50,7 +53,7 @@ public class BlogService {
     private static void authorizeArticleAuthor(Article article) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!article.getAuthor().equals(userName)) {
-            throw new IllegalArgumentException("not authorized");
+            throw new NotFoundException(ErrorCode.INVALID_INPUT_VALUE);
         }
     }
 }

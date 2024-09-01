@@ -18,10 +18,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
+
 @Configuration
+@Profile("test")
 @EnableWebSecurity
 @RequiredArgsConstructor
-@Profile("test")
 public class WebSecurityConfig {
 
     private final UserDetailsService userDetailsService;

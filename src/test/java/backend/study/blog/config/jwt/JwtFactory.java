@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Duration;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 
+@ActiveProfiles("test")
 @Getter
 public class JwtFactory {
 
