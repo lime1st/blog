@@ -3,9 +3,12 @@ package backend.study.blog.controller;
 
 import backend.study.blog.config.error.ErrorCode;
 import backend.study.blog.domain.Article;
+import backend.study.blog.domain.Comment;
 import backend.study.blog.domain.User;
 import backend.study.blog.dto.ArticleDto;
+import backend.study.blog.dto.CommentDto;
 import backend.study.blog.repository.BlogRepository;
+import backend.study.blog.repository.CommentRepository;
 import backend.study.blog.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
@@ -55,6 +58,9 @@ class BlogApiControllerTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    CommentRepository commentRepository;
+
     User user;
 
     @BeforeEach
@@ -62,6 +68,7 @@ class BlogApiControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
         blogRepository.deleteAll();
+        commentRepository.deleteAll();
     }
 
     @BeforeEach
@@ -77,6 +84,37 @@ class BlogApiControllerTest {
                         user,
                         user.getPassword(),
                         user.getAuthorities()));
+    }
+
+    @DisplayName("addComment: 댓 추가")
+    @Test
+    public void addComment() throws Exception {
+        //  given
+        final String url = "/api/comments";
+
+        Article savedArticle = createDefaultArticle();
+        final Long articleId = savedArticle.getId();
+        final String content = "content";
+        final CommentDto commentDto = new CommentDto(articleId, content);
+        final String requestBody = objectMapper.writeValueAsString(commentDto);
+
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("username");
+
+        //  when
+        ResultActions resultActions = mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .principal(principal)
+                .content(requestBody));
+
+        //  then
+        resultActions.andExpect(status().isCreated());
+
+        List<Comment> comments = commentRepository.findAll();
+
+        assertThat(comments.size()).isEqualTo(1);
+        assertThat(comments.get(0).getArticle().getId()).isEqualTo(articleId);
+        assertThat(comments.get(0).getContent()).isEqualTo(content);
     }
 
     @DisplayName("findArticle: 잘못된 HTTP 메서드로 조회하면 실패")

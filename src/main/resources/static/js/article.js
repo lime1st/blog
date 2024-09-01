@@ -68,6 +68,30 @@ if (createButton) {
     });
 }
 
+// 댓글 생성
+const commentCreateButton = document.getElementById('comment-create-tn');
+
+if (commentCreateButton) {
+commentCreateButton.addEventListener('click', event => {
+        articleId = document.getElementById('article-id').value;
+
+        body = JSON.stringify({
+            articleId: articleId,
+            content: document.getElementById('content').value
+        });
+        function success() {
+            alert('등록 완료되었습니다.');
+            location.replace('/articles/' + articleId);
+        };
+        function fail() {
+            alert('등록 실패');
+            location.replace('/articles/' + articleId);
+        };
+
+        httpRequest('POST', '/api/comments', body, success, fail);
+    })
+}
+
 
 // 쿠키를 가져오는 함수
 function getCookie(key) {
