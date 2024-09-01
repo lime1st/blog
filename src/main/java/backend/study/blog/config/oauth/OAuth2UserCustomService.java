@@ -14,7 +14,6 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
-@Profile("prod")
 public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
