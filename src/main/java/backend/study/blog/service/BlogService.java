@@ -4,8 +4,11 @@ import backend.study.blog.config.error.ErrorCode;
 import backend.study.blog.config.error.exception.ArticleNotFoundException;
 import backend.study.blog.config.error.exception.NotFoundException;
 import backend.study.blog.domain.Article;
+import backend.study.blog.domain.Comment;
 import backend.study.blog.dto.ArticleDto;
+import backend.study.blog.dto.CommentDto;
 import backend.study.blog.repository.BlogRepository;
+import backend.study.blog.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.util.List;
 public class BlogService {
 
     private final BlogRepository blogRepository;
+    private final CommentRepository commentRepository;
 
     public Article save(ArticleDto articleDto, String userName) {
        return blogRepository.save(articleDto.toEntity(userName));
@@ -55,5 +59,11 @@ public class BlogService {
         if (!article.getAuthor().equals(userName)) {
             throw new NotFoundException(ErrorCode.INVALID_INPUT_VALUE);
         }
+    }
+
+    public Comment addComment(CommentDto commentDto, String userName) {
+        Article article = blogRepository.findById(commentDto.getArticleId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_INPUT_VALUE));
+        return commentRepository.save(commentDto.toEntity(userName, article));
     }
 }
