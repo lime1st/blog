@@ -43,8 +43,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation ('com.github.javafaker:javafaker:1.0.2') { exclude module: 'snakeyaml' }
-
-	testRuntimeOnly 'com.h2database:h2'
+	testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
