@@ -1,5 +1,6 @@
 package backend.study.blog.service;
 
+import backend.study.blog.config.error.exception.UserNotFoundException;
 import backend.study.blog.domain.User;
 import backend.study.blog.dto.UserDto;
 import backend.study.blog.repository.UserRepository;
@@ -33,11 +34,11 @@ public class UserService {
 
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+                .orElseThrow(UserNotFoundException::new);
     }
 }

@@ -1,6 +1,7 @@
 package backend.study.blog.controller;
 
 
+import backend.study.blog.config.error.ErrorCode;
 import backend.study.blog.domain.Article;
 import backend.study.blog.domain.User;
 import backend.study.blog.dto.ArticleDto;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,13 +30,12 @@ import java.security.Principal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
 class BlogApiControllerTest {
@@ -78,6 +79,22 @@ class BlogApiControllerTest {
                         user.getAuthorities()));
     }
 
+    @DisplayName("findArticle: 잘못된 HTTP 메서드로 조회하면 실패")
+    @Test
+    public void invalidHttpMethod() throws Exception {
+        //  given
+        final String url = "/api/articles/{id}";
+
+        //  when
+        final ResultActions resultActions = mockMvc.perform(post(url, 1));
+
+        //  then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(jsonPath("$.message").value(ErrorCode.METHOD_NOT_ALLOWED.getMessage()));
+    }
+
     @DisplayName("addArticle: title 이 null 이면 실패")
     @Test
     public void addArticleNullValidation() throws Exception {
@@ -99,7 +116,27 @@ class BlogApiControllerTest {
                 .content(requestBody));
 
         //  then
-        result.andExpect(status().isBadRequest());
+        result
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("findArticle: 존재하지 않는 아티클 조회는 실패")
+    @Test
+    public void findArticleInvalidArticle() throws Exception {
+        //  given
+        final String url = "/api/articles/{id}";
+        final long invalidId = 1;
+
+        //  when
+        final ResultActions resultActions = mockMvc.perform(get(url, invalidId));
+
+        //  then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(ErrorCode.ARTICLE_NOT_FOUND.getMessage()))
+                .andExpect(jsonPath("$.code").value((ErrorCode.ARTICLE_NOT_FOUND.getCode())));
     }
 
     @DisplayName("addArticle: title 이 10글자 초과면 실패")
