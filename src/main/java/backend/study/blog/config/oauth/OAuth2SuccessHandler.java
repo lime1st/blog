@@ -21,7 +21,7 @@ import java.time.Duration;
 
 @RequiredArgsConstructor
 @Component
-@Profile("!test")
+@Profile("prod")
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";

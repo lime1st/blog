@@ -8,7 +8,7 @@ import org.springframework.util.SerializationUtils;
 
 import java.util.Base64;
 
-@Profile("!test")
+@Profile("prod")
 public class CookieUtil {
 
     //  요청값(이름, 값, 만료 기간)을 바탕으로 쿠키 추가
