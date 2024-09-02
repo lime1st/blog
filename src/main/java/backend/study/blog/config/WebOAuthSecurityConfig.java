@@ -25,7 +25,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 
 @RequiredArgsConstructor
 @Configuration
-@Profile("!test")
+@Profile("prod")
 public class WebOAuthSecurityConfig {
 
     private final OAuth2UserCustomService oAuth2UserCustomService;

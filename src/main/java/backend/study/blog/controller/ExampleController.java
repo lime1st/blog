@@ -5,12 +5,21 @@ import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Controller
 public class ExampleController {
+
+    //  favicon 요청 처리
+    @RequestMapping("favicon.ico")
+    @ResponseBody
+    void returnNoFavicon() {
+        // No action needed, this prevents a 404 error for favicon requests.
+    }
 
     @GetMapping("/thymeleaf/example")
     public String thymeleafExample(Model model) {
